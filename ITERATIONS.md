@@ -40,6 +40,7 @@ La plateforme (Postgres, registre, etc.) n'était pas démarrée au début de ce
   - Reporté à une itération suivante : écran « Ticket envoyé » séparé, écran « Qui êtes-vous ? », notification au responsable infrastructures, persistance réelle, upload de photo.
   - Harnais : aucun blocage du hook `verifier-avant-signal.sh` ni du contrat de déployabilité (0 BORNE, 0 ALARME après ajout de `.env.example` et `DEPLOIEMENT.md`).
   - `e2e/demo.spec.ts` non mis à jour cette itération (pas encore de temps dédié) — à faire à l'itération suivante si le temps le permet. Signalé, ne bloque pas.
+  - **Correctif après signal** : l'écran publié était sans style (fond noir, texte blanc) — `page.module.css` ne stylait que le conteneur, pas `<h1>`/`<form>`/`<select>`/`<textarea>`/`<button>`, et le mode sombre du CSS global prenait le dessus. Repéré par le développeur via une capture d'écran, corrigé et redéployé sur la même URL (pas de nouveau signal : même numéro de version, même URL publique).
   - **Modifications** :
     - `frontend/src/app/page.tsx` : remplace la page Next.js par défaut par le formulaire « Signaler un dommage » (centre sportif, description, photo) et l'écran de confirmation — sert les 3 critères d'acceptation.
     - `frontend/src/app/validation.ts` + `validation.test.ts` : logique de validation du formulaire, testée — sert le critère de validation.
