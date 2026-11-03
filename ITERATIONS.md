@@ -33,11 +33,24 @@ La plateforme (Postgres, registre, etc.) n'était pas démarrée au début de ce
 - **Fichiers prévus** : `frontend/src/app/page.tsx`, `.env.example`, `DEPLOIEMENT.md`, éventuellement `api/src/routes.ts` si une route `/api/v1/signalements` mock est ajoutée.
 - **Tests unitaires prévus** : 1, sur la validation du formulaire (champs obligatoires) si le temps le permet — sinon reporté et noté au bilan.
 - **Étapes ajoutées à la démo** : ouvrir l'écran, remplir et valider le formulaire.
-- **Bilan** : _à remplir en fin d'itération._
+- **Bilan** :
+  - Durée de codage réelle : 1 minute (chrono `.iterations/1.debut`→`.iterations/1.fin`). Pas de dépassement sur le codage lui-même.
+  - ⚠️ Mais le temps total (hors codage) a largement dépassé les 5-10 minutes annoncées : la plateforme n'était pas démarrée (≈2 min) et `node_modules/` n'existait nulle part dans le dépôt, donc un `npm install` complet a été nécessaire avant de pouvoir écrire le moindre fichier (bloqué sinon par le hook de lint). Le build de l'image frontend (npm ci + next build dans Docker) a aussi pris plusieurs minutes. Ces trois postes sont incompressibles et indépendants de la taille du code.
+  - Critères satisfaits : les 3 (formulaire visible, confirmation à la validation, `/health`/`/sante` répondent avec un corps).
+  - Reporté à une itération suivante : écran « Ticket envoyé » séparé, écran « Qui êtes-vous ? », notification au responsable infrastructures, persistance réelle, upload de photo.
+  - Harnais : aucun blocage du hook `verifier-avant-signal.sh` ni du contrat de déployabilité (0 BORNE, 0 ALARME après ajout de `.env.example` et `DEPLOIEMENT.md`).
+  - `e2e/demo.spec.ts` non mis à jour cette itération (pas encore de temps dédié) — à faire à l'itération suivante si le temps le permet. Signalé, ne bloque pas.
+  - **Modifications** :
+    - `frontend/src/app/page.tsx` : remplace la page Next.js par défaut par le formulaire « Signaler un dommage » (centre sportif, description, photo) et l'écran de confirmation — sert les 3 critères d'acceptation.
+    - `frontend/src/app/validation.ts` + `validation.test.ts` : logique de validation du formulaire, testée — sert le critère de validation.
+    - `.env.example`, `DEPLOIEMENT.md` : complètent le contrat de déployabilité (règles 2 et 8).
+    - `api/Dockerfile`, `frontend/Dockerfile` : qualification des images de base en `docker.io/library/…` (exigée par le `CLAUDE.md` racine).
+    - `podman-compose.yml` : écrit pour la première fois, selon la recette du `CLAUDE.md` racine (ports 8080/8081, réseau `core-network`).
 
-## À venir (si du temps subsiste après l'itération 1)
+## À venir
 
-1. Écran « Ticket envoyé » (récapitulatif du ticket créé).
+1. Écran « Ticket envoyé » séparé (récapitulatif du ticket créé), au lieu du simple message de confirmation actuel.
 2. Sélecteur de rôle « Qui êtes-vous ? ».
 3. Notification au responsable infrastructures (email ou Teams) à la validation du formulaire.
 4. Persistance réelle et upload de photo via l'API.
+5. Mise à jour de `e2e/demo.spec.ts` avec le parcours de signalement.
